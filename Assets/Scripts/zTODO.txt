@@ -1,0 +1,16 @@
+﻿TODO H - Weapon Drops | delete weapon after certain amount of time
+TODO H - COOP Jednota Shop in Game
+TODO H - MOZNOST POUZIVAT HLAŠKY
+TODO L - Multiple Character selection | special e. g. better speed or health
+TODO L - Server and NetCode from BloodRain
+
+Idea - Norbert Lakatoš Fast Zombie
+Idea - Day / Night Cycle
+
+NOTE - If AI has rigidbody physics calculations are done in FixedUpdate so they are same as the player one's
+NOTE - Enemies must have Mass 0 since i don't want them to receive velocity from bullets
+
+I = Idea
+L = Low Priority
+M = Medium Priority
+H = High Priority

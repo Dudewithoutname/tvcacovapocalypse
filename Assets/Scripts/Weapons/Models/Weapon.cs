@@ -9,6 +9,8 @@ public class Weapon : MonoBehaviour
     public bool IsAvailabe = true;
     public bool IsAnimating;
     public SpriteRenderer Model;
+    public SpriteRenderer[] SubModels;
+
     public WeaponType Type;
  
     public bool Buyable;

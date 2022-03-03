@@ -41,6 +41,7 @@ public class Enemy : MonoBehaviour
     
     private int _health;
     private bool isPlayerColliding;
+    private bool onCooldown;
     private Dictionary<uint, Collider2D> collidingEnemies;
     
     protected virtual void Init(){}
@@ -72,7 +73,7 @@ public class Enemy : MonoBehaviour
 
     private void Kill()
     {
-        if (deathSounds.Count > 0) AudioBulb.playAudio(deathSounds[Random.Range(0, deathSounds.Count)], 0.6f);
+        if (deathSounds.Count > 0) AudioBulb.PlayAudio(deathSounds[Random.Range(0, deathSounds.Count)], 0.6f);
         Player.Singleton.Money += MoneyFromKill.value;
         Destroy(gameObject);
     }
@@ -95,7 +96,7 @@ public class Enemy : MonoBehaviour
             StartCoroutine(passEnemy(enemy));   
         }
         
-        if (entity.collider.CompareTag("Player"))
+        if (entity.collider.CompareTag("Player") && !onCooldown)
         {
             isPlayerColliding = true;
             Player.Singleton.Health -= damage;
@@ -125,11 +126,13 @@ public class Enemy : MonoBehaviour
     }
     private IEnumerator damageTick()
     {
-       while (isPlayerColliding)
-       {
+        onCooldown = true;
+        while (isPlayerColliding)
+        {
            yield return new WaitForSeconds(0.4f);
            Player.Singleton.Health -= damage;
-       }
+        }
+        onCooldown = false;
     }
 
     private IEnumerator passEnemy(Enemy enemy)

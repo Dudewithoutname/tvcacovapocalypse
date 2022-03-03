@@ -21,17 +21,19 @@ public class Bullet : MonoBehaviour
         var recoil = Random.Range(Weapon.Recoil * -1, Weapon.Recoil);
         return new Vector2(origin.x + recoil, origin.y - recoil);
     }
+
+    private void OnCollisionEnter2D(Collision2D other) => onCollision(other.collider);
     
-    private void OnCollisionEnter2D(Collision2D other)
+    protected virtual void onCollision(Collider2D coll)
     {
-        if (other.collider.CompareTag("Enemy"))
+        if (coll.CompareTag("Enemy"))
         {
             Destroy(Instantiate(EffectLibrary.Particles["Blood"], transform.position, transform.rotation), 2f);
-            other.collider.GetComponent<Enemy>().Health -= Weapon.Damage;
+            coll.GetComponent<Enemy>().Health -= Weapon.Damage;
         }
         
         Destroy(gameObject);
-    } 
+    }
 
     private IEnumerator destroyAfterTime(float time)
     {

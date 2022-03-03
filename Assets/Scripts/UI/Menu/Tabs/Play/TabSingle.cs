@@ -8,8 +8,8 @@ public class TabSingle : MenuTab
     
     protected override void onOpen()
     {
-        WaveManager.Difficulty = (Difficulty) DifficultySelector.value;
-        DifficultySelector.onValueChanged.AddListener(selected => WaveManager.Difficulty = (Difficulty) selected);    
+        WaveManager.Difficulty = Difficulties.List[(DifficultyType)DifficultySelector.value];
+        DifficultySelector.onValueChanged.AddListener(selected => WaveManager.Difficulty = Difficulties.List[(DifficultyType)selected]);    
     }
 
     protected override void onClose()

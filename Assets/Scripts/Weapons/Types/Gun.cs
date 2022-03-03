@@ -49,17 +49,17 @@ public class Gun : Weapon
         audioSource.Play();
 
         Ammo--;
-        StartCoroutine(FireRateTick());
+        StartCoroutine(fireRateTick());
     }
 
-    private IEnumerator FireRateTick()
+    private IEnumerator fireRateTick()
     {
         IsAvailabe = false;
         yield return new WaitForSeconds(Firerate);
         IsAvailabe = true;
     }
     
-    public IEnumerator ReloadTick() 
+    public virtual IEnumerator ReloadTick() 
     {
         if (!IsAvailabe || Ammo >= MaxAmmo) yield break;
         

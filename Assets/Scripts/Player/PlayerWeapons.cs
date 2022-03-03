@@ -37,13 +37,13 @@ public sealed class PlayerWeapons : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(cor());
+        StartCoroutine(giveStartingWeapon());
     }
 
-    private IEnumerator cor()
+    private IEnumerator giveStartingWeapon()
     {
         yield return new WaitForSeconds(1f);
-        GiveWeapon(2);
+        GiveWeapon(4);
     }
     private void Update()
     {
@@ -76,22 +76,20 @@ public sealed class PlayerWeapons : MonoBehaviour
 
         Player.Singleton.Model.flipX = Mathf.Abs(z) > 90;
 
-        if (ActiveWeapon != null && !ActiveWeapon.IsAnimating)
+        if (ActiveWeapon != null && !ActiveWeapon.IsAnimating && (Mathf.Abs(z) > 90 && !isFlipped || Mathf.Abs(z) <= 90 && isFlipped))
         {
             ActiveWeapon.Model.flipY = Mathf.Abs(z) > 90;
 
-            if (Mathf.Abs(z) > 90 && !isFlipped)
+            if (ActiveWeapon is Gun gun) gun.ShootOrigin.transform.localPosition = new Vector2(gun.ShootOrigin.localPosition.x, -gun.ShootOrigin.localPosition.y);
+            if (ActiveWeapon.SubModels != null && ActiveWeapon.SubModels.Length > 0)
             {
-                if (ActiveWeapon is Gun gun) gun.ShootOrigin.transform.localPosition = new Vector2(gun.ShootOrigin.localPosition.x, -gun.ShootOrigin.localPosition.y);
-                isFlipped = true;
+                foreach (var mdl in ActiveWeapon.SubModels)
+                {
+                    mdl.flipY = Mathf.Abs(z) > 90;
+                    mdl.transform.localPosition = new Vector2(mdl.transform.localPosition.x, -mdl.transform.localPosition.y);
+                }
             }
-
-            if (Mathf.Abs(z) <= 90 & isFlipped)
-            {
-                if (ActiveWeapon is Gun gun) gun.ShootOrigin.transform.localPosition = new Vector2(gun.ShootOrigin.localPosition.x, -gun.ShootOrigin.localPosition.y);
-                
-                isFlipped = false;
-            }
+            isFlipped = !isFlipped;
         }
     }
 }

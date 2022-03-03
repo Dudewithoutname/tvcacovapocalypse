@@ -8,8 +8,8 @@ using Random = UnityEngine.Random;
 
 public class WaveManager : MonoBehaviour
 {
-    public const ushort MAX_ENEMIES_ALIVE = 24;
-    public static Difficulty Difficulty = Difficulty.NORMAL;
+    public const ushort MAX_ENEMIES_ALIVE = 32;
+    public static Difficulty Difficulty = Difficulties.List[DifficultyType.NORMAL];
     public static WaveManager Singleton
     {
         get => _singleton;
@@ -27,7 +27,7 @@ public class WaveManager : MonoBehaviour
         set
         {
             _enemies = value;
-            if (UIManager.Singleton.WaveEnemies != null) UIManager.Singleton.WaveEnemies.text = $"Enemies: <color=#ffffff>{_enemies}</color>";
+            if (UIManager.Singleton.WaveEnemies.text != null) UIManager.Singleton.WaveEnemies.text = $"Enemies: <color=#ffffff>{_enemies}</color>";
             if (_enemies == 0) waveEnd();
         }
     }
@@ -117,7 +117,6 @@ public class WaveManager : MonoBehaviour
         else // to night
         {
             var pos = 1f;
-
             while (EnviromentLight.intensity > 0f)
             {
                 EnviromentLight.intensity = Mathf.Lerp(pos, 0.0f, speed);
@@ -150,7 +149,7 @@ public class WaveManager : MonoBehaviour
                 EnemyManager.SpawnEnemy(queue[0]);
                 queue.RemoveAt(0);
                 
-                yield return new WaitForSeconds((Wave <= 3) ? 1.6f : 0.3f);
+                yield return new WaitForSeconds(Difficulty.SpawnTime);
             }
             
             yield return new WaitForSeconds(1.5f);
@@ -160,15 +159,14 @@ public class WaveManager : MonoBehaviour
     private List<string> genWaveEnemies()
     {
         var countTotal = getEnemyCountByRound();
-        var countHard = Math.Floor(countTotal / 12f);
-        var countMedium = (Wave < 3 && Difficulty != Difficulty.HELL) ? 1 : Math.Floor(countTotal / 4f);
-        
         var enemies = new List<string>();
+
+        var countMedium = (ushort) Math.Floor(Difficulty.MediumRate);
+        var countHard = (ushort) Math.Floor(Difficulty.HardRate);
         
         var mediumEnemies = EnemyManager.Singleton.EnemyList.Where(pair => pair.Value.Difficulty == 2).Select(pair => pair.Key).ToList();
-        if (mediumEnemies.Count > 0)
+        if (Wave >= Difficulty.MediumWave)
         {
-
             for (var i = 0; i < countMedium; i++)
             {
                 enemies.Add(mediumEnemies[Random.Range(0, mediumEnemies.Count)]);
@@ -176,7 +174,7 @@ public class WaveManager : MonoBehaviour
         }
 
         var hardEnemies = EnemyManager.Singleton.EnemyList.Where(pair => pair.Value.Difficulty == 3).Select(pair => pair.Key).ToList();
-        if (hardEnemies.Count > 0)
+        if (Wave >= Difficulty.HardWave)
         {
             for (var i = 0; i < countHard; i++)
             {
@@ -187,7 +185,6 @@ public class WaveManager : MonoBehaviour
         if (enemies.Count != countTotal)
         {
             var lowEnemies = EnemyManager.Singleton.EnemyList.Where(pair => pair.Value.Difficulty == 1).Select(pair => pair.Key).ToList();
-
             for (var i = enemies.Count; i < countTotal; i++)
             {
                 enemies.Add(lowEnemies[Random.Range(0, lowEnemies.Count)]);
@@ -199,11 +196,7 @@ public class WaveManager : MonoBehaviour
         return enemies;
     }
 
-    private ushort getEnemyCountByRound()
-    {
-        var count = 25;
-        return (ushort) (Wave * count > 666 ? 666 : Wave * count);
-    }
+    private ushort getEnemyCountByRound() => (ushort) (Wave * Difficulty.BaseEnemies > 666 ? 666 : Wave * Difficulty.BaseEnemies);
 }
 
 public enum RoundState
@@ -212,11 +205,4 @@ public enum RoundState
     FREETIME,
     WAVE,
     BOSS
-}
-
-public enum Difficulty
-{
-    NORMAL,
-    HARD,
-    HELL
 }

@@ -13,18 +13,18 @@ public class Melee : Weapon
     {
         if (!IsAvailabe) return;
 
-        AudioBulb.playAudio(SlashSounds[Random.Range(0, SlashSounds.Count)], 0.4f);
+        AudioBulb.PlayAudio(SlashSounds[Random.Range(0, SlashSounds.Count)], 0.4f);
         animator.Play("swing", -1, 0f);
 
-        // ReSharper disable once Unity.PreferNonAllocApi
-        var colliders = Physics2D.OverlapCircleAll(HitPoint.position, Radius);
+        var colliders = new Collider2D[16];
+        Physics2D.OverlapCircleNonAlloc(gameObject.transform.position, 15f, colliders);
         
-        foreach (var collider in colliders)
+        foreach (var coll in colliders)
         {
-            if (collider.CompareTag("Enemy"))
+            if (coll.CompareTag("Enemy"))
             {
-                Destroy(Instantiate(EffectLibrary.Particles["Blood"], collider.transform.position, collider.transform.rotation), 2f);
-                collider.GetComponent<Enemy>().Health -= Damage;
+                Destroy(Instantiate(EffectLibrary.Particles["Blood"], coll.transform), 2f);
+                coll.GetComponent<Enemy>().Health -= Damage;
             }
         }
 

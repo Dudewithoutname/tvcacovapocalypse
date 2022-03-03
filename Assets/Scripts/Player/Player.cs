@@ -25,7 +25,7 @@ public class Player : MonoBehaviour
             
             UIManager.Singleton.Health = _health.ToString();
             
-            if (prevHealth > _health) AudioBulb.playAudio(HitSounds[Random.Range(0, HitSounds.Count)], 0.95f);
+            if (prevHealth > _health) AudioBulb.PlayAudio(HitSounds[Random.Range(0, HitSounds.Count)], 0.95f);
             
             if (_health <= 0)
             {
@@ -41,6 +41,7 @@ public class Player : MonoBehaviour
         set
         {
             _money = value;
+            // TODO FIX
             UIManager.Singleton.Money = _money.ToString(CultureInfo.CurrentCulture).Replace(',', '.');
         }
     }

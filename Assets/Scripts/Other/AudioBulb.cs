@@ -4,7 +4,7 @@ public class AudioBulb : MonoBehaviour
 {
     public AudioSource AudioSource;
 
-    public static void playAudio(AudioClip clip, float volume)
+    public static void PlayAudio(AudioClip clip, float volume)
     {
         var audioBulb = Instantiate(EnemyManager.Singleton.AudioBulb);
         

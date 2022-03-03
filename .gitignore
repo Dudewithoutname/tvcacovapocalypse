@@ -4,6 +4,7 @@
 [Bb]uild/
 [Bb]uilds/
 Assets/AssetStoreTools*
+Logs
 
 #tvoj tatko's .idea
 .idea
@@ -38,3 +39,6 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+*.log
+*.log
+Logs/

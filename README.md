@@ -1,3 +1,3 @@
 # Tv Cacov Apocalypse
 
-Unfinsihed famous game from titok based on the vlado vach
+Unfinished famous game from titok based on the vlado vach
